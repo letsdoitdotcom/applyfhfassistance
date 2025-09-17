@@ -3,6 +3,7 @@ services:
     name: fhfassistance-website
     env: static
     buildCommand: echo "Static site - no build needed"
+    startCommand: npx serve -s site -l 10000
     staticPublishPath: ./site
     routes:
       - type: rewrite
