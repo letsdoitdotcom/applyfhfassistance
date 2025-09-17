@@ -98,3 +98,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fhfassist
   .catch((error) => {
     console.error('MongoDB connection error:', error);
   });
+
+  console.log('DIRNAME:', __dirname);
+console.log('CWD:', process.cwd());
+
