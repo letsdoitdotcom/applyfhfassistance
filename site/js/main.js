@@ -65,9 +65,19 @@ document.addEventListener('DOMContentLoaded', function () {
           body: JSON.stringify(formData)
         });
 
-        const result = await response.json();
+        // Defensive parsing: only attempt JSON.parse when the response is JSON
+        const contentType = response.headers.get('content-type') || '';
+        let result;
+        if (contentType.includes('application/json')) {
+          result = await response.json();
+        } else {
+          // If server returned HTML or text (e.g. 404 page), capture it for logging
+          const text = await response.text();
+          console.error('Unexpected non-JSON response from /api/submit-application', { status: response.status, text });
+          throw new Error('Server returned an unexpected response.');
+        }
 
-        if (result.success) {
+        if (result && result.success) {
           out.classList.remove('error');
           out.classList.add('success');
           out.innerHTML = '<strong>Application submitted successfully!</strong>' +
@@ -104,8 +114,14 @@ document.addEventListener('DOMContentLoaded', function () {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const j = await resp.json();
-        if (j.success) {
+        const cType = resp.headers.get('content-type') || '';
+        let j;
+        if (cType.includes('application/json')) j = await resp.json();
+        else {
+          console.error('Non-JSON response from /api/contact', { status: resp.status, text: await resp.text() });
+          throw new Error('Server returned non-JSON response');
+        }
+        if (j && j.success) {
           out.className = 'result success';
           out.innerHTML = '<strong>Message sent!</strong><p>Thanks — we will be in touch shortly.</p>';
           contactForm.reset();
@@ -195,8 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const out = document.createElement('div');
     try {
       const resp = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-      const j = await resp.json();
-      if (j.success) {
+      const sType = resp.headers.get('content-type') || '';
+      let j;
+      if (sType.includes('application/json')) j = await resp.json();
+      else {
+        console.error('Non-JSON response from /api/subscribe', { status: resp.status, text: await resp.text() });
+        throw new Error('Server returned non-JSON response');
+      }
+      if (j && j.success) {
         out.className = 'result success';
         out.innerHTML = '<strong>Subscribed!</strong><p>Thanks — we will keep you updated.</p>';
         nForm.reset();
