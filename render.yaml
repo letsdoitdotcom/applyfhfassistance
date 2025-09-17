@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: fhfassistance-website
+    env: static
+    buildCommand: echo "Static site - no build needed"
+    staticPublishPath: ./site
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
