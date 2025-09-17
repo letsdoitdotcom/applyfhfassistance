@@ -11,6 +11,29 @@ How to run locally:
 python -m http.server 8000; # then open http://localhost:8000/site/
 ```
 
+### Copy logo into the site folder
+
+If you host only the `site/` directory (common on static hosts), copy the logo into `site/` so pages can load it as `/fhf_logo.png`:
+
+PowerShell (Windows):
+
+```powershell
+./scripts/copy-logo.ps1
+```
+
+This will copy `fhf_logo.png` from the repo root into `site/fhf_logo.png`.
+
+## Deploying the API to Vercel (summary)
+
+This repository includes `server.js` (an Express server) used for local development. To deploy API endpoints on Vercel, convert the Express routes to serverless functions under the `api/` directory and set `MONGODB_URI` as a Vercel environment variable. See the `api/` folder in this repo for examples.
+
+### Detailed Vercel steps
+
+1. Sign in to Vercel and create a new project pointing to this repository.
+2. In the project settings -> Environment Variables, add `MONGODB_URI` with your MongoDB Atlas connection string (include user/password). Example: `mongodb+srv://<user>:<pass>@cluster0.mongodb.net/fhfassistance?retryWrites=true&w=majority`.
+3. Ensure the Vercel Project Build settings use the default Node runtime. No build script is required for the static site.
+4. The `api/` folder contains serverless functions that mirror the Express endpoints (POST `/api/submit-application`, POST `/api/contact`, POST `/api/subscribe`, GET `/api/applications`). These will be deployed automatically by Vercel.
+5. If you host the static site from the `site/` folder, set the Vercel project's
 3. Open `http://localhost:8000/site/index.html` in your browser.
 
 Pages included:
