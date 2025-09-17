@@ -33,6 +33,30 @@ This repository includes `server.js` (an Express server) used for local developm
 2. In the project settings -> Environment Variables, add `MONGODB_URI` with your MongoDB Atlas connection string (include user/password). Example: `mongodb+srv://<user>:<pass>@cluster0.mongodb.net/fhfassistance?retryWrites=true&w=majority`.
 3. Ensure the Vercel Project Build settings use the default Node runtime. No build script is required for the static site.
 4. The `api/` folder contains serverless functions that mirror the Express endpoints (POST `/api/submit-application`, POST `/api/contact`, POST `/api/subscribe`, GET `/api/applications`). These will be deployed automatically by Vercel.
+### Protecting the admin applications endpoint
+
+The `GET /api/applications` endpoint is intended for administrative use. To prevent public access it requires a header `x-admin-token` that matches the environment variable `ADMIN_API_TOKEN` (or `VERCEL_ADMIN_API_TOKEN`) set in your Vercel project settings.
+
+Example using `curl`:
+
+```powershell
+curl -H "x-admin-token: your_secret_here" https://your-deployment.vercel.app/api/applications
+```
+
+Set `ADMIN_API_TOKEN` in Vercel (Project Settings -> Environment Variables) before calling the endpoint.
+
+### SSN hashing (required)
+
+To protect personally-identifiable information, the application endpoint now hashes SSNs before saving them. You must set an environment variable `SSN_HASH_SECRET` (or `VERCEL_SSN_HASH_SECRET`) in Vercel to a strong random secret (32+ chars). The server will HMAC-SHA256 the provided SSN and store the hex digest in the `ddn` field.
+
+If `SSN_HASH_SECRET` is not set, submissions will be rejected with a server configuration error.
+
+Example (set in Vercel):
+
+```
+SSN_HASH_SECRET=your_long_random_secret_here
+```
+
 5. If you host the static site from the `site/` folder, set the Vercel project's
 3. Open `http://localhost:8000/site/index.html` in your browser.
 

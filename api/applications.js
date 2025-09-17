@@ -25,6 +25,14 @@ const Application = mongoose.models.Application || mongoose.model('Application',
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') return res.status(405).json({ success: false, message: 'Method not allowed' });
+
+  // Simple token-based protection for admin access
+  const adminToken = process.env.ADMIN_API_TOKEN || process.env.VERCEL_ADMIN_API_TOKEN || '';
+  const provided = req.headers['x-admin-token'] || req.headers['X-Admin-Token'] || '';
+  if (!adminToken || !provided || provided !== adminToken) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
   try {
     const apps = await Application.find().sort({ submittedAt: -1 }).limit(100);
     return res.status(200).json({ success: true, applications: apps });
