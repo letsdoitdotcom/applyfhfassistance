@@ -41,6 +41,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'site', 'index.html'));
 });
 
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'site', 'index.html'));
+});
+
 app.get('/about.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'site', 'about.html'));
 });
@@ -51,6 +55,14 @@ app.get('/contact.html', (req, res) => {
 
 app.get('/apply.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'site', 'apply.html'));
+});
+
+app.get('/privacy.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'site', 'privacy.html'));
+});
+
+app.get('/terms.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'site', 'terms.html'));
 });
 
 // API endpoint to submit application
