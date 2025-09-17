@@ -5,7 +5,3 @@ services:
     buildCommand: echo "Static site - no build needed"
     startCommand: npx serve -s site -l 10000
     staticPublishPath: ./site
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
