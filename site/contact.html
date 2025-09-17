@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact - fhfassistance</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="contact-sm">
+      <span>Call: +1 (800) 555-1234</span>
+      <span>Email: support@fhfassistance.org</span>
+    </div>
+    <nav class="main-nav">
+  <a class="brand" href="index.html">fhfassistance</a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a class="btn-apply" href="apply.html">Apply Now</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container" style="max-width:900px;margin:2rem auto;">
+    <section class="card" style="display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-start;">
+      <div style="flex:1;min-width:260px;">
+        <h1 class="fancy-heading">Contact Us</h1>
+        <p>If you have any questions about our grants or the application process, feel free to reach out to us. We're here to help!</p>
+        <h2 class="fancy-heading">Contact Information</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;">
+          <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+            <div style="font-size:2rem;margin-bottom:.5rem;">📞</div>
+            <h3 style="margin:.5rem 0;color:var(--text);">Phone</h3>
+            <p style="margin:0;color:var(--muted);">+1 (800) 555-1234</p>
+          </div>
+          <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+            <div style="font-size:2rem;margin-bottom:.5rem;">✉️</div>
+            <h3 style="margin:.5rem 0;color:var(--text);">Email</h3>
+            <p style="margin:0;color:var(--muted);"><a href="mailto:support@fhfassistance.org" style="color:var(--muted);text-decoration:none;">support@fhfassistance.org</a></p>
+          </div>
+          <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+            <div style="font-size:2rem;margin-bottom:.5rem;">📍</div>
+            <h3 style="margin:.5rem 0;color:var(--text);">Address</h3>
+            <p style="margin:0;color:var(--muted);">123 Grant Lane, Opportunity City, OC 12345</p>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1.2;min-width:320px;">
+        <form id="contactForm" class="card" style="box-shadow:0 4px 18px rgba(18,38,63,0.06);padding:2rem 1.5rem;">
+          <h2 class="fancy-heading" style="margin-top:0">Send Us a Message</h2>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required placeholder="Your Name" style="margin-bottom:1rem">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="Your Email" style="margin-bottom:1rem">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required placeholder="Your Message" style="margin-bottom:1.5rem"></textarea>
+          <button type="submit" style="width:100%;font-size:1.1rem;">Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="#" onclick="location.reload()">Privacy Policy</a>
+      <a href="#" onclick="location.reload()">Terms of Service</a>
+    </div>
+  <p>&copy; 2025 fhfassistance. All rights reserved.</p>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
