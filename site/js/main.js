@@ -122,6 +122,22 @@ document.addEventListener('DOMContentLoaded', function () {
         items.forEach(li => { li.style.opacity = ''; li.style.transform = ''; li.style.transition = ''; });
       }
     });
+    // Close menu when clicking a nav link
+    nav.querySelectorAll('ul li a').forEach(a => a.addEventListener('click', () => {
+      if (nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    }));
+    // Close menu when clicking outside
+    document.addEventListener('click', (ev) => {
+      const withinNav = ev.target.closest && ev.target.closest('.main-nav');
+      const isBurger = ev.target === burger || ev.target.closest && ev.target.closest('.hamburger');
+      if (!withinNav && !isBurger && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
   }
 
   // Testimonial rotation with fade
@@ -152,5 +168,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const email = nForm.querySelector('input[name="newsletterEmail"]')?.value || nForm.querySelector('input')?.value;
     alert('Subscribed (demo): ' + (email || '[no email]'));
     nForm.reset();
+  });
+  
+  // Accessibility/helpful label change: if any label contains 'Phone' change it to 'Number' for clarity
+  document.querySelectorAll('label').forEach(lbl => {
+    if (lbl.textContent && lbl.textContent.trim().startsWith('Phone')) {
+      lbl.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) node.nodeValue = node.nodeValue.replace('Phone', 'Number');
+      });
+    }
   });
 });
