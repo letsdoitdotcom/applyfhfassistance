@@ -89,10 +89,35 @@ document.addEventListener('DOMContentLoaded', function () {
   // Contact form behavior
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
+    contactForm.addEventListener('submit', async function (e) {
       e.preventDefault();
-      alert('Thank you — this is a demo contact form.');
-      contactForm.reset();
+      const out = document.createElement('div');
+      try {
+        const fd = new FormData(contactForm);
+        const payload = {
+          name: fd.get('name') || '',
+          email: fd.get('email') || '',
+          message: fd.get('message') || '',
+          phone: fd.get('phone') || ''
+        };
+        const resp = await fetch('/api/contact', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const j = await resp.json();
+        if (j.success) {
+          out.className = 'result success';
+          out.innerHTML = '<strong>Message sent!</strong><p>Thanks — we will be in touch shortly.</p>';
+          contactForm.reset();
+        } else {
+          out.className = 'result error';
+          out.innerHTML = '<strong>Unable to send</strong><p>Please try again later.</p>';
+        }
+      } catch (err) {
+        out.className = 'result error';
+        out.innerHTML = '<strong>Unable to send</strong><p>Please try again later.</p>';
+      }
+      contactForm.parentNode.insertBefore(out, contactForm.nextSibling);
     });
   }
 
@@ -163,11 +188,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Newsletter demo handler
   const nForm = document.getElementById('newsletterForm');
-  if (nForm) nForm.addEventListener('submit', function (e) {
+  if (nForm) nForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const email = nForm.querySelector('input[name="newsletterEmail"]')?.value || nForm.querySelector('input')?.value;
-    alert('Subscribed (demo): ' + (email || '[no email]'));
-    nForm.reset();
+    const input = nForm.querySelector('input[name="newsletterEmail"]') || nForm.querySelector('input');
+    const email = input?.value;
+    const out = document.createElement('div');
+    try {
+      const resp = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+      const j = await resp.json();
+      if (j.success) {
+        out.className = 'result success';
+        out.innerHTML = '<strong>Subscribed!</strong><p>Thanks — we will keep you updated.</p>';
+        nForm.reset();
+      } else {
+        out.className = 'result error';
+        out.innerHTML = '<strong>Subscription failed</strong><p>Please try again.</p>';
+      }
+    } catch (err) {
+      out.className = 'result error';
+      out.innerHTML = '<strong>Subscription failed</strong><p>Please try again.</p>';
+    }
+    nForm.parentNode.insertBefore(out, nForm.nextSibling);
   });
   
   // Accessibility/helpful label change: if any label contains 'Phone' change it to 'Number' for clarity

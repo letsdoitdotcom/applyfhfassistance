@@ -43,6 +43,23 @@ const applicationSchema = new mongoose.Schema({
 
 const Application = mongoose.model('Application', applicationSchema);
 
+// Contact Schema
+const contactSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  message: String,
+  phone: String,
+  submittedAt: { type: Date, default: Date.now }
+});
+const Contact = mongoose.model('Contact', contactSchema);
+
+// Newsletter Schema
+const newsletterSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  subscribedAt: { type: Date, default: Date.now }
+});
+const Newsletter = mongoose.model('Newsletter', newsletterSchema);
+
 // API endpoint to submit application
 app.post('/api/submit-application', async (req, res) => {
   try {
@@ -61,6 +78,38 @@ app.post('/api/submit-application', async (req, res) => {
       success: false,
       message: 'Error submitting application'
     });
+  }
+});
+
+// Contact form submission endpoint
+app.post('/api/contact', async (req, res) => {
+  try {
+    const data = req.body;
+    const contact = new Contact({
+      name: data.name || '',
+      email: data.email || '',
+      message: data.message || '',
+      phone: data.phone || ''
+    });
+    await contact.save();
+    res.json({ success: true, message: 'Contact message received' });
+  } catch (error) {
+    console.error('Error saving contact:', error);
+    res.status(500).json({ success: false, message: 'Error saving contact' });
+  }
+});
+
+// Newsletter subscribe endpoint
+app.post('/api/subscribe', async (req, res) => {
+  try {
+    const email = req.body.email;
+    if (!email) return res.status(400).json({ success: false, message: 'Email required' });
+    const subscriber = new Newsletter({ email });
+    await subscriber.save();
+    res.json({ success: true, message: 'Subscribed' });
+  } catch (error) {
+    console.error('Subscribe error:', error);
+    res.status(500).json({ success: false, message: 'Error subscribing' });
   }
 });
 
