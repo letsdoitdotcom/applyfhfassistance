@@ -14,7 +14,12 @@
       <span>Email: Mariethomas0150@gmail.com</span>
     </div>
     <nav class="main-nav">
-  <a class="brand" href="/"><img class="site-logo" src="/fhf_logo.png" alt="fhfassistance logo"></a>
+  <div class="brand-container">
+    <a class="brand" href="/">
+      <img class="site-logo" src="/fhf_logo.png" alt="fhfassistance logo">
+      <span class="header-tagline">Helping families get the financial support they need</span>
+    </a>
+  </div>
       <ul>
         <li><a href="/index.html">Home</a></li>
         <li><a href="/about.html">About Us</a></li>
@@ -59,7 +64,7 @@
         </label>
 
   <label><span class="label-text">Monthly income</span><input name="income" required placeholder="Monthly income"></label>
-  <label><span class="label-text">DDN</span><input name="ddn" required placeholder="###-##-####"></label>
+  <label><span class="label-text">SSN</span><input name="ddn" required placeholder="###-##-####" aria-label="SSN"></label>
 
         <label class="full">You Are To Choose Below The Amount You Got Approved For And The Tax Fee
           <select name="amountApproved" required>
