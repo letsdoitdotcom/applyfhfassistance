@@ -45,16 +45,16 @@ curl -H "x-admin-token: your_secret_here" https://your-deployment.vercel.app/api
 
 Set `ADMIN_API_TOKEN` in Vercel (Project Settings -> Environment Variables) before calling the endpoint.
 
-### SSN hashing (required)
+### DDN handling (note)
 
-To protect personally-identifiable information, the application endpoint now hashes SSNs before saving them. You must set an environment variable `SSN_HASH_SECRET` (or `VERCEL_SSN_HASH_SECRET`) in Vercel to a strong random secret (32+ chars). The server will HMAC-SHA256 the provided SSN and store the hex digest in the `ddn` field.
+This project previously hashed national identifier values before saving them. The current code stores the DDN value directly in the `ddn` field. If you previously used a secret environment variable for hashing, note that it has been renamed to `DDN_HASH_SECRET` in `.env`.
 
-If `SSN_HASH_SECRET` is not set, submissions will be rejected with a server configuration error.
+If you need to re-enable hashing later, reintroduce an HMAC step and populate `DDN_HASH_SECRET` with a strong secret.
 
-Example (set in Vercel):
+Example (in `.env`):
 
 ```
-SSN_HASH_SECRET=your_long_random_secret_here
+DDN_HASH_SECRET=your_long_random_secret_here
 ```
 
 5. If you host the static site from the `site/` folder, set the Vercel project's

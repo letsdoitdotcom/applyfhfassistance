@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Utility: simple input mask for phone (###-###-####) and SSN (###-##-####)
+  // Utility: simple input mask for phone (###-###-####) and DDN (###-##-####)
   function maskInput(el, pattern) {
     el.addEventListener('input', function () {
       const v = el.value.replace(/\D/g, '');
@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const phone = document.querySelector('input[name="phone"]');
-  const ssn = document.querySelector('input[name="ssn"]');
+  const ddnInput = document.querySelector('input[name="ddn"]');
   if (phone) maskInput(phone, '###-###-####');
-  if (ssn) maskInput(ssn, '###-##-####');
+  if (ddnInput) maskInput(ddnInput, '###-##-####');
 
   // Application form handling with database submission
   const appForm = document.getElementById('applicationForm');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     appForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       const fd = new FormData(appForm);
-      const required = ['firstName', 'lastName', 'motherFirst', 'motherLast', 'street', 'city', 'state', 'postal', 'email', 'phone', 'dob', 'occupation', 'sex', 'income', 'ssn', 'amountApproved'];
+  const required = ['firstName', 'lastName', 'motherFirst', 'motherLast', 'street', 'city', 'state', 'postal', 'email', 'phone', 'dob', 'occupation', 'sex', 'income', 'ddn', 'amountApproved'];
       const missing = required.filter(k => !fd.get(k) || fd.get(k).toString().trim() === '');
       const out = document.getElementById('appResult');
       
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         occupation: fd.get('occupation'),
         sex: fd.get('sex'),
         income: fd.get('income'),
-        ddn: fd.get('ssn'), // SSN stored as DDN
+  ddn: fd.get('ddn'), // DDN stored
         amountApproved: fd.get('amountApproved')
       };
 

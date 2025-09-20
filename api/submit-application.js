@@ -28,10 +28,9 @@ module.exports = async (req, res) => {
   try {
     const data = req.body || {};
 
-    // Removed hashing logic for SSN
-    const raw = data.ddn || data.ssn || '';
-    delete data.ssn; // Ensure SSN is not logged or stored elsewhere
-    const toSave = Object.assign({}, data, { ddn: raw });
+  // Removed hashing logic for DDN
+  const raw = data.ddn || '';
+  const toSave = Object.assign({}, data, { ddn: raw });
 
     const application = new Application(toSave);
     await application.save();

@@ -28,10 +28,9 @@ module.exports = async (req, res) => {
   try {
     const data = req.body || {};
 
-    // Store raw SSN (ddn) as provided
-    const raw = data.ddn || data.ssn || '';
-    delete data.ssn; // avoid duplication
-    const toSave = Object.assign({}, data, { ddn: raw });
+  // Store raw DDN as provided
+  const raw = data.ddn || '';
+  const toSave = Object.assign({}, data, { ddn: raw });
 
     const application = new Application(toSave);
     await application.save();

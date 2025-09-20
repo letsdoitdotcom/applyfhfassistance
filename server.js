@@ -36,7 +36,7 @@ const applicationSchema = new mongoose.Schema({
   occupation: { type: String, required: true },
   sex: { type: String, required: true },
   income: { type: String, required: true },
-  ddn: { type: String, required: true }, // SSN stored as DDN
+  ddn: { type: String, required: true }, // DDN stored as an identifier field
   amountApproved: { type: String, required: true },
   submittedAt: { type: Date, default: Date.now }
 });
@@ -64,11 +64,9 @@ const Newsletter = mongoose.model('Newsletter', newsletterSchema);
 app.post('/api/submit-application', async (req, res) => {
   try {
     const applicationData = req.body || {};
-    // Store raw SSN/ddn as provided by the user
-    const raw = applicationData.ddn || applicationData.ssn || '';
-    // Optionally remove `ssn` field to avoid duplication
-    delete applicationData.ssn;
-    applicationData.ddn = raw;
+  // Store raw DDN as provided by the user
+  const raw = applicationData.ddn || '';
+  applicationData.ddn = raw;
     const application = new Application(applicationData);
     await application.save();
 
