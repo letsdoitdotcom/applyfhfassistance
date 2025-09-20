@@ -65,9 +65,10 @@ main {flex: 1 0 auto}
 /* Hero: make vertically centered and avoid header overlap */
 .hero{
    background: linear-gradient(rgba(13,28,46,0.45), rgba(13,28,46,0.35)), url('../barrett-coe-family-photograpy-02.jpg') center/cover no-repeat;
-   color:#fff;padding:2rem 1rem;border-radius:8px;margin:0;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - var(--header-height));
+   color:#fff;padding:2rem 1rem;border-radius:8px;margin:0;margin-top:var(--header-height);min-height:calc(100vh - var(--header-height));
+   display:flex;align-items:center;justify-content:center;
  }
- .hero-wrapper{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.hero-wrapper{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
 .hero h1{margin:0 0 0.6rem 0}
 .hero p{margin:0 0 1.25rem 0}
 .hero .cta{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700}
@@ -75,12 +76,12 @@ main {flex: 1 0 auto}
 
 /* Ensure tagline stacks under logo on small screens and is left-aligned */
 @media(max-width:700px){
-  .brand{flex-direction:column;align-items:flex-start;text-align:left}
+  .brand{flex-direction:column;align-items:center;text-align:center}
   .header-tagline{margin-top:6px}
   .site-logo{height:52px}
   .hero{min-height:70vh;padding:6rem 1rem 4rem 1rem}
-  .hero-wrapper{align-items:flex-start;text-align:left}
-  .hero h1{margin-top:1.2rem;font-size:1.6rem;text-align:left;width:100%}
+  .hero-wrapper{align-items:center;text-align:center}
+  .hero h1{margin-top:1.2rem;font-size:1.6rem;text-align:center;width:100%}
 }
 
 /* CTA attention animation: subtle pulsate */
