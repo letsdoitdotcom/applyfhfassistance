@@ -62,11 +62,11 @@ main {flex: 1 0 auto}
  .hero{
    /* use the barrett image placed at repo root; path from site/css is ../../ */
    background: linear-gradient(rgba(13,28,46,0.45), rgba(13,28,46,0.35)), url('../barrett-coe-family-photograpy-02.jpg') center/cover no-repeat;
-   color:#fff;padding:7rem 1rem 5rem 1rem;text-align:center;border-radius:8px;margin:0;
+   color:#fff;padding:10rem 1rem 7rem 1rem;text-align:center;border-radius:8px;margin:0;
  }
-.hero h1{font-size:1.8rem;margin-bottom:0.65rem;margin-top: 1rem;}
+.hero h1{font-size:1.8rem;margin-bottom:0.65rem;margin-top: 2rem;}
 .hero p{font-size:1.05rem;margin-bottom:1.25rem;color:rgba(255,255,255,0.9)}
-.hero .cta{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700}
+.hero .cta{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700;margin-bottom: 2rem;}
 .hero .cta:hover{background:var(--accent-2)}
 /* CTA attention animation: subtle pulsate */
 .cta{animation: none}
@@ -284,5 +284,31 @@ footer .footer-col{min-width:160px}
 .accordion details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
 .accordion details[open]{box-shadow:0 8px 24px rgba(18,38,63,0.06)}
 .accordion details p{padding:0 1rem 1rem 1rem;margin:0;color:var(--muted);transition:opacity .2s ease}
+
+/* Add subtle animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Pulsating animation for the Get Started button */
+.cta.pulse {
+  animation: pulse 2.2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 6px 18px rgba(180, 83, 9, 0.06); }
+  50% { transform: scale(1.04); box-shadow: 0 14px 30px rgba(180, 83, 9, 0.12); }
+  100% { transform: scale(1); box-shadow: 0 6px 18px rgba(180, 83, 9, 0.06); }
+}
+
+/* Apply fade-in to cards and timeline steps */
+.card, .timeline .step {
+  opacity: 0;
+  animation: fadeIn 1s ease-in-out forwards;
+}
 
 
