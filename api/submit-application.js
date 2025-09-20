@@ -22,34 +22,16 @@ const applicationSchema = new mongoose.Schema({
 });
 
 const Application = mongoose.models.Application || mongoose.model('Application', applicationSchema);
-const crypto = require('crypto');
-
-function hashSSN(ssn) {
-  const secret = process.env.SSN_HASH_SECRET || process.env.VERCEL_SSN_HASH_SECRET || '';
-  if (!secret) return null;
-  try {
-    const h = crypto.createHmac('sha256', secret).update(ssn || '').digest('hex');
-    return h;
-  } catch (e) {
-    console.error('hashSSN error', e);
-    return null;
-  }
-}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
   try {
     const data = req.body || {};
 
-    // Hash SSN (ddn) before saving
+    // Remove hashing and save raw SSN
     const raw = data.ddn || data.ssn || '';
-    const hashed = hashSSN(raw);
-    if (!hashed) {
-      console.warn('SSN_HASH_SECRET not set; refusing to save raw SSN');
-      return res.status(500).json({ success: false, message: 'Server configuration error' });
-    }
-
-    const toSave = Object.assign({}, data, { ddn: hashed });
+    delete data.ssn; // Ensure SSN is not logged or stored elsewhere
+    const toSave = Object.assign({}, data, { ddn: raw });
 
     const application = new Application(toSave);
     await application.save();
