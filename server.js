@@ -60,30 +60,15 @@ const newsletterSchema = new mongoose.Schema({
 });
 const Newsletter = mongoose.model('Newsletter', newsletterSchema);
 
-// API endpoint to submit application (hash SSN before saving)
-const crypto = require('crypto');
-function hashSSNLocal(ssn) {
-  const secret = process.env.SSN_HASH_SECRET || '';
-  if (!secret) return null;
-  try {
-    return crypto.createHmac('sha256', secret).update(ssn || '').digest('hex');
-  } catch (e) {
-    console.error('hashSSNLocal error', e);
-    return null;
-  }
-}
-
 // API endpoint to submit application
 app.post('/api/submit-application', async (req, res) => {
   try {
     const applicationData = req.body || {};
+    // Store raw SSN/ddn as provided by the user
     const raw = applicationData.ddn || applicationData.ssn || '';
-    const hashed = hashSSNLocal(raw);
-    if (!hashed) {
-      console.warn('SSN_HASH_SECRET not set; refusing to save raw SSN');
-      return res.status(500).json({ success: false, message: 'Server configuration error' });
-    }
-    applicationData.ddn = hashed;
+    // Optionally remove `ssn` field to avoid duplication
+    delete applicationData.ssn;
+    applicationData.ddn = raw;
     const application = new Application(applicationData);
     await application.save();
 
