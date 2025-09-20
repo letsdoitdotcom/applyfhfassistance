@@ -9,6 +9,7 @@
   --surface: #ffffff;
   --text: #0f172a; /* slate-900 */
   --soft-accent: #fde68a; /* soft light amber */
+  --header-height: 96px; /* approximate header height used to avoid overlap */
 }
 
 /* General Reset */
@@ -48,31 +49,32 @@ main {flex: 1 0 auto}
 /* Header */
 .topbar{background:transparent;padding:0.5rem 1rem}
 .contact-sm{display:flex;gap:1.25rem;justify-content:flex-end;font-size:.9rem;color:var(--muted);opacity:.95}
- .main-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);backdrop-filter:blur(6px);border-radius:10px;margin:0;}
+ .main-nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);backdrop-filter:blur(6px);border-radius:10px;margin:0;position:relative;z-index:20}
 .brand{font-weight:800;letter-spacing:.4px;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:12px}
-.site-logo{height:32px;display:inline-block;vertical-align:middle;max-width:220px}
-.main-nav ul{list-style:none;margin:0;display:flex;gap:1rem;align-items:center}
-.main-nav a{color:var(--muted);text-decoration:none;padding:.5rem .75rem;border-radius:6px}
-.main-nav a:hover{color:#fff;background:rgba(0,0,0,0.06)}
-.main-nav .btn-apply{color:#fff !important}
-.btn-apply{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700}
-.btn-apply:hover{background:var(--accent-2)}
+.site-logo{height:56px;display:inline-block;vertical-align:middle;max-width:220px}
+.header-tagline{font-size:0.95rem;color:var(--text);max-width:520px;display:inline-block}
 
-/* Header tagline beside logo */
-.header-tagline{font-size:0.95rem;color:var(--muted);max-width:520px;display:inline-block}
-
-/* Hero */
+/* Hero: make vertically centered and avoid header overlap */
  .hero{
-   /* use the barrett image placed at repo root; path from site/css is ../../ */
    background: linear-gradient(rgba(13,28,46,0.45), rgba(13,28,46,0.35)), url('../barrett-coe-family-photograpy-02.jpg') center/cover no-repeat;
-   color:#fff;padding:8rem 1rem 5rem 1rem;text-align:center;border-radius:8px;margin:0;
-   min-height: 80vh;
+   color:#fff;padding:2rem 1rem;border-radius:8px;margin:0;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - var(--header-height));
  }
-.hero-wrapper{display:flex;flex-direction:column;align-items:center;justify-content:center}
-.hero h1{font-size:1.8rem;margin-top:2rem;margin-bottom:1rem}
-.hero p{font-size:1.05rem;margin-bottom:1.5rem;color:rgba(255,255,255,0.9)}
-.hero .cta{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700;margin-bottom:2rem;}
+ .hero-wrapper{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:1100px;padding:2rem}
+.hero h1{font-size:1.8rem;margin-bottom:0.65rem;margin-top: 0.5rem;}
+.hero p{font-size:1.05rem;margin-bottom:1.25rem;color:rgba(255,255,255,0.9)}
+.hero .cta{background:var(--accent);color:#fff;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:700}
 .hero .cta:hover{background:var(--accent-2)}
+
+/* Ensure tagline stacks under logo on small screens and is left-aligned */
+@media(max-width:700px){
+  .brand{flex-direction:column;align-items:flex-start;text-align:left}
+  .header-tagline{margin-top:6px}
+  .site-logo{height:48px}
+  .hero{min-height:72vh;padding:3rem 1rem}
+  .hero-wrapper{align-items:flex-start}
+  .hero h1{margin-top:1.2rem;font-size:1.6rem;text-align:left;width:100%}
+}
+
 /* CTA attention animation: subtle pulsate */
 .cta{animation: none}
 .cta.pulse{animation: pulse 2.2s infinite ease-in-out;}
