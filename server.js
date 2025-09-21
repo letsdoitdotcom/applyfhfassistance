@@ -14,10 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'site')));
 
 // Optional request logger — remove or comment out in production
-app.use((req, res, next) => {
-  console.log(`→ ${req.method} ${req.url}`);
-  next();
-});
+// Request logging intentionally disabled to avoid logging PII in production
 
 // MongoDB Schema
 const applicationSchema = new mongoose.Schema({
@@ -151,5 +148,4 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fhfassist
   });
 
 // Debug logs for paths
-console.log('DIRNAME:', __dirname);
-console.log('CWD:', process.cwd());
+// Debug path logs removed to avoid accidental disclosure of file paths or PII in logs
