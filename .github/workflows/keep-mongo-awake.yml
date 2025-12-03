@@ -1,0 +1,41 @@
+name: Keep MongoDB Awake
+
+on:
+  schedule:
+    # Run every 25 minutes (adjust as needed, max 5 per hour for free tier)
+    - cron: '*/25 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-mongo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install mongoose
+
+      - name: Ping MongoDB
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          node -e "
+          const mongoose = require('mongoose');
+          mongoose.connect(process.env.MONGODB_URI).then(async () => {
+            console.log('Connected to MongoDB');
+            // Simple ping: count documents in applications collection
+            const count = await mongoose.connection.db.collection('applications').countDocuments();
+            console.log('Documents in applications:', count);
+            await mongoose.disconnect();
+            console.log('Disconnected');
+          }).catch(err => {
+            console.error('Error:', err);
+            process.exit(1);
+          });
+          "
