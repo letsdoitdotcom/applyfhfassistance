@@ -2,8 +2,8 @@ name: Keep MongoDB Awake
 
 on:
   schedule:
-    # Run every 25 minutes (adjust as needed, max 5 per hour for free tier)
-    - cron: '*/25 * * * *'
+    # Run every 30 minutes to keep free-tier clusters from pausing
+    - cron: '*/30 * * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -19,23 +19,26 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install mongoose
+        run: npm install mongoose --no-audit --no-fund
 
-      - name: Ping MongoDB
+      - name: Ping MongoDB (lightweight)
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           node -e "
           const mongoose = require('mongoose');
-          mongoose.connect(process.env.MONGODB_URI).then(async () => {
-            console.log('Connected to MongoDB');
-            // Simple ping: count documents in applications collection
-            const count = await mongoose.connection.db.collection('applications').countDocuments();
-            console.log('Documents in applications:', count);
-            await mongoose.disconnect();
-            console.log('Disconnected');
-          }).catch(err => {
-            console.error('Error:', err);
-            process.exit(1);
-          });
+          (async () => {
+            try {
+              await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
+              console.log('Connected to MongoDB');
+              const admin = mongoose.connection.db.admin();
+              const res = await admin.ping();
+              console.log('Ping response:', res);
+              await mongoose.disconnect();
+              console.log('Disconnected');
+            } catch (err) {
+              console.error('Ping error:', err && err.message ? err.message : err);
+              process.exit(1);
+            }
+          })();
           "
